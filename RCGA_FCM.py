@@ -138,76 +138,81 @@ def fanguiy(A1):#反归一化
 
     return A2
 #%%
-pop_size = 8  # 初始种群个数
-pop_cr = 0.5  # 交叉概率
-pop_mr = 0.3  # 变异概率
-pop_ma = 1  # 变异系数
-iter = 100
-w = 504        #滑动窗口大小
-a = 1      #预测未来一小时的
-dataf = pd.read_csv('1anhui.csv',header=None)
-data2 = dataf.iloc[w:w + 50,:]
+def  main():
+    pop_size = 8  # 初始种群个数
+    pop_cr = 0.5  # 交叉概率
+    pop_mr = 0.3  # 变异概率
+    pop_ma = 1  # 变异系数
+    iter = 100
+    w = 504        #滑动窗口大小
+    a = 1      #预测未来一小时的
+    dataf = pd.read_csv('1anhui.csv',header=None)
+    data2 = dataf.iloc[w:w + 50,:]
 
-Num1=data2.shape[0]                             #测试集行数189
-Num2=data2.shape[1]                             #列数12
+    Num1=data2.shape[0]                             #测试集行数189
+    Num2=data2.shape[1]                             #列数12
 
-data_pred = [0]*50
+    data_pred = [0]*50
 
-for i in range(0,50):
-    t = 0
-    BESTW = [0]
+    for i in range(0,50):
+        t = 0
+        BESTW = [0]
 
-    data = data1[i:i + w, :]
-    ItemNum1 = data.shape[0]  # 训练集行数570
-    ItemNum2 = data.shape[1]  # 列数12
+        data = data1[i:i + w, :]
+        ItemNum1 = data.shape[0]  # 训练集行数570
+        ItemNum2 = data.shape[1]  # 列数12
 
-    A = [0] * pop_size  # 初始种群
+        A = [0] * pop_size  # 初始种群
 
-    for j in range(pop_size):
-        A[j] = -1 + 2 * np.random.random((ItemNum2, ItemNum2))
+        for j in range(pop_size):
+            A[j] = -1 + 2 * np.random.random((ItemNum2, ItemNum2))
 
-    bestw, k, m = initialization(pop_size, A, data)
-    for op in range(1000):
-        A, bestw = newA(bestw, A, data, k, m)
+        bestw, k, m = initialization(pop_size, A, data)
+        for op in range(1000):
+            A, bestw = newA(bestw, A, data, k, m)
 
-    data_test = data1[i + w-1]  # 测试输入
-    data_pred[i] = caa(bestw,data_test)
-
-
-#print(bestw)                  # 最优权重矩阵展示
-
-#最优权重矩阵做预测
-A1 = np.array(data_pred)                    #预测出的数据
-A1 = fanguiy(A1)                           #反归一化后的预测数据
-Mwucha = MSE(A1,data2)
-Rwucha = RMSE(Mwucha)
+        data_test = data1[i + w-1]  # 测试输入
+        data_pred[i] = caa(bestw,data_test)
 
 
-# A1 = cala(bestw, data2, Num1)  # 更新后的矩阵
-# A1 = np.array(A1)
-Bm = np.linalg.norm(A1 - data2) / Num1         #欧式距离
+    #print(bestw)                  # 最优权重矩阵展示
 
-jd = jdwucha(A1,data2)
-xd = xdwucha(A1,data2)
-
-
-# print(bestw)
-print('绝对误差：{}'.format(jd))
-print('相对误差：{}'.format(xd))
-print('欧式距离：{}'.format(Bm))
-print('MSE：{}'.format(Mwucha))
-print('RMSE:{}'.format(RMSE(Mwucha)))
+    #最优权重矩阵做预测
+    A1 = np.array(data_pred)                    #预测出的数据
+    A1 = fanguiy(A1)                           #反归一化后的预测数据
+    Mwucha = MSE(A1,data2)
+    Rwucha = RMSE(Mwucha)
 
 
-temp = [0]*5
-temp[0] = ["CO","NO2","SO2","O3","TEMPERATURE","HUMIDITY"]
-temp[1] = jd
-temp[2] = xd
-temp[3] = Mwucha
-temp[4] = Rwucha
-temp = np.array(temp)
-temp = pd.DataFrame(temp)
-temp.to_csv('RCGA_9yue_anhui.csv' , header=None)
+    # A1 = cala(bestw, data2, Num1)  # 更新后的矩阵
+    # A1 = np.array(A1)
+    Bm = np.linalg.norm(A1 - data2) / Num1         #欧式距离
+
+    jd = jdwucha(A1,data2)
+    xd = xdwucha(A1,data2)
+
+
+    # print(bestw)
+    print('绝对误差：{}'.format(jd))
+    print('相对误差：{}'.format(xd))
+    print('欧式距离：{}'.format(Bm))
+    print('MSE：{}'.format(Mwucha))
+    print('RMSE:{}'.format(RMSE(Mwucha)))
+
+
+    temp = [0]*5
+    temp[0] = ["CO","NO2","SO2","O3","TEMPERATURE","HUMIDITY"]
+    temp[1] = jd
+    temp[2] = xd
+    temp[3] = Mwucha
+    temp[4] = Rwucha
+    temp = np.array(temp)
+    temp = pd.DataFrame(temp)
+    temp.to_csv('RCGA_9yue_anhui.csv' , header=None)
+
+
+if __name__ == '__main__':
+    main()
 
 
 
