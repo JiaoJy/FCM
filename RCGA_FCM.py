@@ -138,7 +138,7 @@ def fanguiy(A1):#反归一化
 
     return A2
 #%%
-def  main():
+if __name__ == '__main__':
     pop_size = 8  # 初始种群个数
     pop_cr = 0.5  # 交叉概率
     pop_mr = 0.3  # 变异概率
@@ -209,10 +209,6 @@ def  main():
     temp = np.array(temp)
     temp = pd.DataFrame(temp)
     temp.to_csv('RCGA_9yue_anhui.csv' , header=None)
-
-
-if __name__ == '__main__':
-    main()
 
 
 
