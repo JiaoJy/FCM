@@ -4,11 +4,11 @@ import math
 from matplotlib import pyplot as plt
 
 from numpy import random
-arr1 = pd.read_csv('1zhaoqing.csv',header=None)
+arr1 = pd.read_csv('1anhui.csv',header=None)
 data1 = np.array(arr1)
 # data2 = pd.read_csv('ceshi5.csv',header=None)
 # data2 = np.array(data2)
-
+#%%
 def crossover(A):#融合交叉
     #A = list(A)
     nA = [0]*8
@@ -26,7 +26,7 @@ def crossover(A):#融合交叉
             nA[2 * i] = A[2 * i]
             nA[2 * i+1] = A[2 * i+1]
     return nA
-
+#%%
 def mutation(A):
     for i in range(0,pop_size):
         A[i] = np.array(A[i])
@@ -40,7 +40,7 @@ def mutation(A):
 
     return A
 
-
+#%%
 def newA(BESTW,A,data,k,m):                                                   #生成新的种群和更新最优权重矩阵
 
     A = crossover(A)
@@ -54,12 +54,11 @@ def newA(BESTW,A,data,k,m):                                                   #�
 
     return A,BESTW
 
-
-
+#%%
 def f(x):
     y = 1/(1+np.exp(-x))
     return y
-
+#%%
 def cala(W,data,a):
     A2 = [0] * a
     A2[0] = data[0]
@@ -69,24 +68,15 @@ def cala(W,data,a):
 
     return A2
         
-
+#%%
 def wucha(W,data,nu):
     A1 = cala(W,data,nu)                 #更新后的矩阵
     A1 = np.array(A1)
 
-    # data1 = np.ones((6068, 12))                # 预测矩阵与真实矩阵的logistic误差
-    # dist = 0
-    #
-    # dist1 = data * (np.log(A1)) + (data1 - data) * (np.log(data1 - A1))
-    # for i in range(0, ItemNum2):
-    #     dist += sum(dist1[:, i])
-    #
-    # dist = -dist / (ItemNum2 * ItemNum2)
-
     dist = np.linalg.norm(A1 - data)/ItemNum1         #预测矩阵与真实矩阵的欧式距离
     return dist
 
-
+#%%
 def initialization(pop_size,A,data):
 
     B1 = [0]*pop_size                                        #对应误差
@@ -100,7 +90,7 @@ def initialization(pop_size,A,data):
 
     return bestw,j,b                                         #返回最好的权重和误差,和最坏的下标
 
-
+#%%
 def jdwucha(A1,data2):
     # A1 = cala(W, data, Num1)  # 更新后的矩阵
     # A1 = np.array(A1)
@@ -108,15 +98,13 @@ def jdwucha(A1,data2):
     dist_temp = np.abs(A1 - data2) / (Num1)
     dist = dist_temp.sum(axis=0)
     return dist
-
+#%%
 def xdwucha(data1,data2):                 #data1是预测的矩阵；data2是要做比较的真实矩阵
 
-
-    # dist = [0] * Num2
     dist_temp = (np.abs((data1 - data2)/data2))/(Num1)
     dist = dist_temp.sum(axis=0)
     return dist
-
+#%%
 def caa(W,data):
     A2 = [0]*a
     for o in range (0,a):
@@ -125,7 +113,7 @@ def caa(W,data):
 
     return A2
 
-
+#%%
 def MSE(A1,data2):
     # dist = [0] * Num2
 
@@ -136,11 +124,11 @@ def MSE(A1,data2):
     #     dist[i] = np.sum(dist_temp[:, i])
     return dist
 
-
+#%%
 def RMSE(M):
     dist = np.power(M,0.5)
     return dist
-
+#%%
 def fanguiy(A1):#反归一化
     A2 = A1.copy()
     for j in range(0,Num2):
@@ -149,6 +137,7 @@ def fanguiy(A1):#反归一化
         A2[:,j] = A1[:,j] * (madata - midata) + midata
 
     return A2
+#%%
 pop_size = 8  # 初始种群个数
 pop_cr = 0.5  # 交叉概率
 pop_mr = 0.3  # 变异概率
@@ -156,7 +145,7 @@ pop_ma = 1  # 变异系数
 iter = 100
 w = 504        #滑动窗口大小
 a = 1      #预测未来一小时的
-dataf = pd.read_csv('1zhaoqing.csv',header=None)
+dataf = pd.read_csv('1anhui.csv',header=None)
 data2 = dataf.iloc[w:w + 50,:]
 
 Num1=data2.shape[0]                             #测试集行数189
@@ -183,8 +172,6 @@ for i in range(0,50):
 
     data_test = data1[i + w-1]  # 测试输入
     data_pred[i] = caa(bestw,data_test)
-
-
 
 
 #print(bestw)                  # 最优权重矩阵展示
@@ -220,56 +207,8 @@ temp[3] = Mwucha
 temp[4] = Rwucha
 temp = np.array(temp)
 temp = pd.DataFrame(temp)
-temp.to_csv('RCGA_9yue_zhaoqing.csv' , header=None)
+temp.to_csv('RCGA_9yue_anhui.csv' , header=None)
 
-
-# x = np.arange(Num1)
-# for i in range (Num2):
-#     y1 = data2.iloc[:,i]
-#     y2 = A1[:,i]
-#     plt.plot(x, y1, label='R')
-#     plt.plot(x, y2, label='P')
-#     plt.title(i, loc='center')
-#     plt.show()
-
-# x = np.arange(ItemNum2)
-# for i in range (0,185,30):
-#     y1 = data2[i]
-#     y2 = A1[i]
-#     plt.plot(x, y1, label='R')
-#     plt.plot(x, y2, label='P')
-#     plt.title(i, loc='center')
-#     plt.show()
-
-
-# for i in range(1,10):          #用于寻找最优的变异概率和变异步长
-#     pop_mr = 0.1*i
-#     print("pop_mr={}".format(pop_mr ))
-#     for j in range (0,10):
-#         for i in range(pop_size):
-#             A[i] = -1 + 2 * np.random.random((ItemNum2, ItemNum2))
-#
-#         bestw, k, m = initialization(pop_size, A, data)
-#         for j in range(100):
-#             A, bestw = newA(bestw, A, data, k, m)
-#
-#         # print(bestw)
-#
-#         # 最优权重矩阵展示
-#         A1 = cala(bestw, data, ItemNum1)  # 更新后的矩阵
-#         A1 = np.array(A1)
-#         Bm = np.linalg.norm(A1 - data)/ItemNum1
-#         print(Bm)
-
-
-
-# x = np.arange(6068)
-# for i in range (ItemNum2):
-#     y1 = data[:,i]
-#     y2 = A1[:,i]
-#     plt.plot(x, y1, label='R')
-#     plt.plot(x, y2, label='P')
-#     plt.show()
 
 
 
