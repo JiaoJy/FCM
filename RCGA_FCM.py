@@ -180,8 +180,8 @@ if __name__ == '__main__':
     #最优权重矩阵做预测
     A1 = np.array(data_pred)                    #预测出的数据
     A1 = fanguiy(A1)                           #反归一化后的预测数据
-    Mwucha = MSE(A1,data2)
-    Rwucha = RMSE(Mwucha)
+   # Mwucha = MSE(A1,data2)
+   # Rwucha = RMSE(Mwucha)
 
 
     # A1 = cala(bestw, data2, Num1)  # 更新后的矩阵
@@ -196,20 +196,67 @@ if __name__ == '__main__':
     print('绝对误差：{}'.format(jd))
     print('相对误差：{}'.format(xd))
     print('欧式距离：{}'.format(Bm))
-    print('MSE：{}'.format(Mwucha))
-    print('RMSE:{}'.format(RMSE(Mwucha)))
+#    print('MSE：{}'.format(Mwucha))
+#    print('RMSE:{}'.format(RMSE(Mwucha)))
 
 
-    temp = [0]*5
+    temp = [0]*3
     temp[0] = ["CO","NO2","SO2","O3","TEMPERATURE","HUMIDITY"]
     temp[1] = jd
     temp[2] = xd
-    temp[3] = Mwucha
-    temp[4] = Rwucha
+#    temp[3] = Mwucha
+#    temp[4] = Rwucha
     temp = np.array(temp)
     temp = pd.DataFrame(temp)
-    temp.to_csv('RCGA_9yue_anhui.csv' , header=None)
+    temp.to_csv('RCGA_prediction.csv' , header=None)
 
+
+
+A1 = A1.T
+data2 = data2.T
+
+plt.title("NO2");\
+plt.plot(range(50), A1[1], color='green', label='predict');\
+plt.plot(range(50), data2.iloc[1], color='red', label='real');\
+plt.legend();\
+plt.xlabel('time');\
+plt.ylabel('value');\
+plt.show();
+plt.title("SO2");\
+plt.plot(range(50), A1[2], color='green', label='predict');\
+plt.plot(range(50), data2.iloc[2], color='red', label='real');\
+plt.legend();\
+plt.xlabel('time');\
+plt.ylabel('value');\
+plt.show();
+plt.title("O3");\
+plt.plot(range(50), A1[3], color='green', label='predict');\
+plt.plot(range(50), data2.iloc[3], color='red', label='real');\
+plt.legend();\
+plt.xlabel('time');\
+plt.ylabel('value');\
+plt.show();
+plt.title("TEMPERATURE");\
+plt.plot(range(50), A1[4], color='green', label='predict');\
+plt.plot(range(50), data2.iloc[4], color='red', label='real');\
+plt.legend();\
+plt.xlabel('time');\
+plt.ylabel('value');\
+plt.show();
+plt.title("HUMIDITY");\
+plt.plot(range(50), A1[5], color='green', label='predict');\
+plt.plot(range(50), data2.iloc[5], color='red', label='real');\
+plt.legend();\
+plt.xlabel('time');\
+plt.ylabel('value');\
+plt.show();
+plt.title("CO");\
+plt.plot(range(50), A1[0], color='green', label='predict');\
+plt.plot(range(50), data2.iloc[0], color='red', label='real');\
+plt.legend();\
+plt.xlabel('time');\
+plt.ylabel('value');\
+plt.show();
 
 
 
