@@ -1,2 +1,2 @@
 # FCM
-模糊认知图环境数据预测
+no read yeah
