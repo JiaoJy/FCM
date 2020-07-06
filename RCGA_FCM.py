@@ -168,7 +168,7 @@ if __name__ == '__main__':
             A[j] = -1 + 2 * np.random.random((ItemNum2, ItemNum2))
 
         bestw, k, m = initialization(pop_size, A, data)
-        for op in range(1000):
+        for op in range(500):
             A, bestw = newA(bestw, A, data, k, m)
 
         data_test = data1[i + w-1]  # 测试输入
