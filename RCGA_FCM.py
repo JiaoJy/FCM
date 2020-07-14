@@ -41,7 +41,9 @@ def mutation(A):
     return A
 
 #%%
-def newA(BESTW,A,data,k,m):                                                   #生成新的种群和更新最优权重矩阵
+def newA(BESTW,A,data,k,m):                                          
+
+         #生成新的种群和更新最优权重矩阵
 
     A = crossover(A)
     A = mutation(A)
@@ -65,6 +67,20 @@ def cala(W,data,a):
     for i in range(a - 1):
         temp = np.dot(data[i], W)
         A2[i + 1] = f(temp)
+
+    return A2
+
+def cala1(W,data):
+    A2 = np.zeros(data.shape[0])
+    for j in range(data.shape[0]):
+        temp = np.dot(W[j],data)
+        A2[j] = f(temp)
+    return A2
+def caa(W,data):
+    A2 = [0]*a
+    for o in range (0,a):
+        temp = np.dot(data,W)
+        A2 = f(temp)
 
     return A2
         
@@ -104,14 +120,7 @@ def xdwucha(data1,data2):                 #data1是预测的矩阵；data2是要
     dist_temp = (np.abs((data1 - data2)/data2))/(Num1)
     dist = dist_temp.sum(axis=0)
     return dist
-#%%
-def caa(W,data):
-    A2 = [0]*a
-    for o in range (0,a):
-        temp = np.dot(data,W)
-        A2 = f(temp)
 
-    return A2
 
 #%%
 def MSE(A1,data2):
@@ -172,7 +181,7 @@ if __name__ == '__main__':
             A, bestw = newA(bestw, A, data, k, m)
 
         data_test = data1[i + w-1]  # 测试输入
-        data_pred[i] = caa(bestw,data_test)
+        data_pred[i] = cala1(bestw,data_test)
 
 
     #print(bestw)                  # 最优权重矩阵展示
@@ -214,50 +223,52 @@ if __name__ == '__main__':
 
 A1 = A1.T
 data2 = data2.T
-
-plt.title("NO2");\
-plt.plot(range(50), A1[1], color='green', label='predict');\
-plt.plot(range(50), data2.iloc[1], color='red', label='real');\
-plt.legend();\
-plt.xlabel('time');\
-plt.ylabel('value');\
-plt.show();
-plt.title("SO2");\
-plt.plot(range(50), A1[2], color='green', label='predict');\
-plt.plot(range(50), data2.iloc[2], color='red', label='real');\
-plt.legend();\
-plt.xlabel('time');\
-plt.ylabel('value');\
-plt.show();
-plt.title("O3");\
-plt.plot(range(50), A1[3], color='green', label='predict');\
-plt.plot(range(50), data2.iloc[3], color='red', label='real');\
-plt.legend();\
-plt.xlabel('time');\
-plt.ylabel('value');\
-plt.show();
-plt.title("TEMPERATURE");\
-plt.plot(range(50), A1[4], color='green', label='predict');\
-plt.plot(range(50), data2.iloc[4], color='red', label='real');\
-plt.legend();\
-plt.xlabel('time');\
-plt.ylabel('value');\
-plt.show();
-plt.title("HUMIDITY");\
-plt.plot(range(50), A1[5], color='green', label='predict');\
-plt.plot(range(50), data2.iloc[5], color='red', label='real');\
-plt.legend();\
-plt.xlabel('time');\
-plt.ylabel('value');\
-plt.show();
-plt.title("CO");\
-plt.plot(range(50), A1[0], color='green', label='predict');\
-plt.plot(range(50), data2.iloc[0], color='red', label='real');\
-plt.legend();\
-plt.xlabel('time');\
-plt.ylabel('value');\
-plt.show();
-
+# =============================================================================
+# 
+# plt.title("NO2");\
+# plt.plot(range(50), A1[1], color='green', label='predict');\
+# plt.plot(range(50), data2.iloc[1], color='red', label='real');\
+# plt.legend();\
+# plt.xlabel('time');\
+# plt.ylabel('value');\
+# plt.show();
+# plt.title("SO2");\
+# plt.plot(range(50), A1[2], color='green', label='predict');\
+# plt.plot(range(50), data2.iloc[2], color='red', label='real');\
+# plt.legend();\
+# plt.xlabel('time');\
+# plt.ylabel('value');\
+# plt.show();
+# plt.title("O3");\
+# plt.plot(range(50), A1[3], color='green', label='predict');\
+# plt.plot(range(50), data2.iloc[3], color='red', label='real');\
+# plt.legend();\
+# plt.xlabel('time');\
+# plt.ylabel('value');\
+# plt.show();
+# plt.title("TEMPERATURE");\
+# plt.plot(range(50), A1[4], color='green', label='predict');\
+# plt.plot(range(50), data2.iloc[4], color='red', label='real');\
+# plt.legend();\
+# plt.xlabel('time');\
+# plt.ylabel('value');\
+# plt.show();
+# plt.title("HUMIDITY");\
+# plt.plot(range(50), A1[5], color='green', label='predict');\
+# plt.plot(range(50), data2.iloc[5], color='red', label='real');\
+# plt.legend();\
+# plt.xlabel('time');\
+# plt.ylabel('value');\
+# plt.show();
+# plt.title("CO");\
+# plt.plot(range(50), A1[0], color='green', label='predict');\
+# plt.plot(range(50), data2.iloc[0], color='red', label='real');\
+# plt.legend();\
+# plt.xlabel('time');\
+# plt.ylabel('value');\
+# plt.show();
+# 
+# =============================================================================
 
 
 
