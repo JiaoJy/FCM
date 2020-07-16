@@ -47,8 +47,6 @@ def caa(W,data):
     for o in range (0,a):
         temp = np.dot(data,W)
         A2 = f(temp)
-
-
     return A2
 
 def wucha(A1,A2):
@@ -71,11 +69,20 @@ def bijiao(A1,A2):
             continue
     return True
 
+#%%
+def drawPre(title,preData,realData,dataNum=50):
+    plt.title(title)
+    plt.plot(range(dataNum), preData, color='green', label='predict');
+    plt.plot(range(dataNum), realData, color='red', label='real');
+    plt.legend();
+    plt.xlabel('time');
+    plt.ylabel('value');
+    plt.show();
 
 jd = [0] * 6
 xd = [0] * 6
 mse = [0] * 6
-arr1 = pd.read_csv('1zhaoqing.csv',header=None)
+arr1 = pd.read_csv('1anhui.csv',header=None)
 data1 = np.array(arr1)
 w = 504
 size = 50
@@ -104,7 +111,7 @@ for i in range(0, size):
         abpwucha = wucha2(y_real,y_pred)
 
         if bijiao(abpwucha,E):
-            print(abpwucha)
+            # print(abpwucha)
             break
         else:
             # 权重矩阵更新
@@ -142,7 +149,7 @@ temp[3] = Mwucha
 temp[4] = Rwucha
 temp = np.array(temp)
 temp = pd.DataFrame(temp)
-temp.to_csv('NHL_9yue_zhaoqing.csv' , header=None)
+temp.to_csv('NHL_9yue_anhui.csv' , header=None)
 
 
 

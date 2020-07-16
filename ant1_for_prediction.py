@@ -4,7 +4,7 @@ import math
 from matplotlib import pyplot as plt
 
 from numpy import random
-arr1 = pd.read_csv('1zhaoqing.csv',header=None)
+arr1 = pd.read_csv('1anhui.csv',header=None)
 data1 = np.array(arr1)
 # data2 = pd.read_csv('ceshi5.csv',header=None)
 # data2 = np.array(data2)
@@ -30,14 +30,6 @@ t0 = 0.02                                        #初始信息素
 a = 1                                      #预测未来一小时的
 
 data_pred = [0]*size
-
-
-
-
-
-
-
-
 
 # h = np.ones(1,10)
 # h[4] = 2                                          #增大选择权重取0的概率；但我不知道在这个问题中有没有必要
@@ -190,9 +182,6 @@ def RMSE(M):
     return dist
 
 
-
-
-
 for i in range(0, size):
 
 
@@ -282,7 +271,7 @@ temp[3] = Mwucha
 temp[4] = Rwucha
 temp = np.array(temp)
 temp = pd.DataFrame(temp)
-temp.to_csv('ACO_9yue_zhaoqing.csv' , header=None)
+temp.to_csv('ACO_9yue_anhui.csv' , header=None)
 
 
 # x = np.arange(Num1)

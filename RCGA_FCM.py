@@ -76,6 +76,7 @@ def cala1(W,data):
         temp = np.dot(W[j],data)
         A2[j] = f(temp)
     return A2
+
 def caa(W,data):
     A2 = [0]*a
     for o in range (0,a):
@@ -200,7 +201,7 @@ if __name__ == '__main__':
 
     #最优权重矩阵做预测
     A1 = np.array(data_pred)                    #预测出的数据
-    A1 = fanguiy(A1)                           #反归一化后的预测数据
+    # A1 = fanguiy(A1)                           #反归一化后的预测数据
     Mwucha = MSE(A1,data2)
     Rwucha = RMSE(Mwucha)
 
@@ -229,14 +230,14 @@ if __name__ == '__main__':
     temp[4] = Rwucha
     temp = np.array(temp)
     temp = pd.DataFrame(temp)
-    temp.to_csv('RCGA_prediction_caa.csv' , header=None)
+    temp.to_csv('RCGA_prediction_cala1.csv' , header=None)
 
     A1 = A1.T
     data2 = data2.T
 
-    drawPre("NO2",A1[0],data2.iloc[0])
-    drawPre("SO2",A1[1],data2.iloc[1])
-    drawPre("O3",A1[2],data2.iloc[2])
-    drawPre("TEMPERATURE",A1[3],data2.iloc[3])
-    drawPre("HUMIDITY",A1[4],data2.iloc[4])
-    drawPre("CO",A1[5],data2.iloc[5])
+    drawPre("CO",A1[0],data2.iloc[0])
+    drawPre("NO2",A1[1],data2.iloc[1])
+    drawPre("SO2",A1[2],data2.iloc[2])
+    drawPre("O3",A1[3],data2.iloc[3])
+    drawPre("TEMPERATURE",A1[4],data2.iloc[4])
+    drawPre("HUMIDITY",A1[5],data2.iloc[5])
