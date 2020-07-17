@@ -201,7 +201,7 @@ if __name__ == '__main__':
 
     #最优权重矩阵做预测
     A1 = np.array(data_pred)                    #预测出的数据
-    # A1 = fanguiy(A1)                           #反归一化后的预测数据
+    #A1 = fanguiy(A1)                           #反归一化后的预测数据
     Mwucha = MSE(A1,data2)
     Rwucha = RMSE(Mwucha)
 
