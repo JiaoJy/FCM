@@ -127,23 +127,10 @@ def cala(W,data):
 def wucha(W,data):
     A1 = cala(W,data)                 #更新后的矩阵
     A1 = np.array(A1)
-
-    # data1 = np.ones((6068, 12))                # 预测矩阵与真实矩阵的logistic误差
-    # dist = 0
-    #
-    # dist1 = data * (np.log(A1)) + (data1 - data) * (np.log(data1 - A1))
-    # for i in range(0, ItemNum2):
-    #     dist += sum(dist1[:, i])
-    #
-    # dist = -dist / (ItemNum2 * ItemNum2)
-
     dist = np.linalg.norm(A1 - data)/ItemNum1         #预测矩阵与真实矩阵的欧式距离
     return dist
 
 def jdwucha(A1,data2):
-    # A1 = cala(W, data, Num1)  # 更新后的矩阵
-    # A1 = np.array(A1)
-    # dist = [0] * Num2
     dist_temp = np.abs(A1 - data2) / (Num1)
     dist = dist_temp.sum(axis=0)
     return dist
@@ -171,9 +158,6 @@ def MSE(A1,data2):
 
     dist_temp = (np.power((A1 - data2),2))/Num1
     dist = dist_temp.sum(axis=0)
-    # for i in range(0, Num2):
-    #
-    #     dist[i] = np.sum(dist_temp[:, i])
     return dist
 
 
@@ -211,7 +195,6 @@ for i in range(0, size):
                 swucha = kwucha
         for o in range(0, NC * NC):                  # 全局信息素的更新
             l = int(bestroute[o])
-            #       print(l.type())
             daltatau.iloc[l][o] = (1 - r) * daltatau.iloc[l][o] + r / swucha
 
         bestw = decode(bestroute)
@@ -223,26 +206,13 @@ for i in range(0, size):
             bestroute = code(W)
             bestroute = bestroute.tolist()
             bestroute = bestroute[0]
-            # print(bestroute.shape)
-            # for i in range(len(bestroute)):
-            #     print(bestroute[i])
-            #     print(type(bestroute[i]))
-            # exit()
             swucha = mwucha
         for mo in range(0, NC * NC):  # 全局信息素的更新
 
             d = int(bestroute[mo])
-            # print(o)
-            # print(d)
-            # print(bestroute)
             daltatau.iloc[d][mo] = (1 - r) * daltatau.iloc[d][mo] + r / swucha
     bestw = decode(bestroute)
     bestw = np.array(bestw).reshape(NC, NC)
-
-    # jd = [0]*ItemNum1
-    # for i in range(0,Num1):
-    #     jd = jdwucha(bestw,data2)
-    # test = data.iloc[data.shape[0] - 1:data.shape[0], :]
 
     data_pred[i] = caa(bestw,data_test)
 
@@ -272,22 +242,3 @@ temp[4] = Rwucha
 temp = np.array(temp)
 temp = pd.DataFrame(temp)
 temp.to_csv('ACO_9yue_anhui.csv' , header=None)
-
-
-# x = np.arange(Num1)
-# for i in range (Num2):
-#     y1 = data2[:,i]
-#     y2 = A1[:,i]
-#     plt.plot(x, y1, label='R')
-#     plt.plot(x, y2, label='P')
-#     plt.title(i, loc='center')
-#     plt.show()
-#
-# x = np.arange(ItemNum2)
-# for i in range (0,185,30):
-#     y1 = data2[i]
-#     y2 = A1[i]
-#     plt.plot(x, y1, label='R')
-#     plt.plot(x, y2, label='P')
-#     plt.title(i, loc='center')
-#     plt.show()
