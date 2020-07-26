@@ -60,7 +60,7 @@ def outlier(data):
     return data
 
 def dataPreprocess():
-    str_path = "E:\Python_Codes\Data\数据20171205\数据\沧州渤海临港产业园"
+    str_path = "数据20171205\数据\沧州渤海临港产业园"
     file2 = 'XH8082015110300850.csv'
 
     # 读取数据
@@ -73,7 +73,6 @@ def dataPreprocess():
     data = outlier(data)
     data = standardization(data)
     data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
-
     # 输出图表
     # plt.rcParams['font.sans-serif'] = ['KaiTi']
     # plt.rcParams['font.serif'] = ['KaiTi']
@@ -89,11 +88,11 @@ def dataPreprocess():
     # plt.legend()
     # plt.show()
 
-    return data.iloc[:, 0]
+    return data
     # return DATA
 
 
-
+data = dataPreprocess()
 
 
 
