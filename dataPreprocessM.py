@@ -15,12 +15,12 @@ from matplotlib import font_manager
 def read_file(path,name,date_column=9,index=9,header=0):
     file_url=os.path.join(path,name)
     data = pd.read_csv(file_url,parse_dates=[date_column],index_col=index)
-    #DATA = DATA[~DATA.index.duplicated()]   # 去除重复索引
     return data
 
 # 重新设置索引
 def reindex_datetime(data,freq="H"):
     data = data[~data.index.duplicated()]  # 去除重复索引
+    #print(data)
     rs = pd.date_range(data.index[0],data.index[-1],freq=freq) #生成时间索引(参数start、end)
     return data.reindex(rs)
 
@@ -66,7 +66,6 @@ def dataPreprocess():
     # 读取数据
     data = read_file(str_path, file2).iloc[:, [1,2,3,4,5,6,7,8]]
     # DATA.columns = ['CO','NO2','SO3','O3','PM25','PM10','TEMPERATURE','HUMIDITY']
-
     # 数据加工
     data = reindex_datetime(data)
     data = imputer(data)
