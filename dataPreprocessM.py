@@ -67,10 +67,10 @@ def dataPreprocess():
     data = read_file(str_path, file2).iloc[:, [1,2,3,4,5,6,7,8]]
     # DATA.columns = ['CO','NO2','SO3','O3','PM25','PM10','TEMPERATURE','HUMIDITY']
     # 数据加工
-    data = reindex_datetime(data)
+    data = reindex_datetime(data) 
     data = imputer(data)
     data = outlier(data)
-    data = standardization(data)
+    data = normalization(data)
     data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
     # 输出图表
     # plt.rcParams['font.sans-serif'] = ['KaiTi']
