@@ -40,7 +40,7 @@ def imputer(data):
 
     return data.dropna()
 
-# 数据归一化
+# 数据最大最小归一化
 def normalization(data):
     return (data-data.min())/(data.max()-data.min())
 
@@ -59,39 +59,36 @@ def outlier(data):
         data.loc[data[i] < box[i] - 1.5 * (box[a + i] - box[i]), i] = box.loc[data[i] < box[i] - 1.5 * (box[a + i] - box[i]), i]
     return data
 
-def dataPreprocess():
-    str_path = "数据20171205\数据\沧州渤海临港产业园"
-    file2 = 'XH8082015110300850.csv'
-
+def dataPreprocess(path,file):
     # 读取数据
-    data = read_file(str_path, file2).iloc[:, [1,2,3,4,5,6,7,8]]
+    data = read_file(path, file).iloc[:, [1,2,3,4,5,6,7,8]]
     # DATA.columns = ['CO','NO2','SO3','O3','PM25','PM10','TEMPERATURE','HUMIDITY']
     # 数据加工
-    data = reindex_datetime(data) 
+    data = reindex_datetime(data)
     data = imputer(data)
     data = outlier(data)
     data = normalization(data)
     data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
-    # 输出图表
-    # plt.rcParams['font.sans-serif'] = ['KaiTi']
-    # plt.rcParams['font.serif'] = ['KaiTi']
-    # plt.rcParams['axes.unicode_minus'] = False
-    #
-    # plt.xlabel('时间（小时）')
-    # plt.ylabel('标准化后的数据')
-    #
-    # plt.plot(DATA.iloc[:, 0], label='CO')
-    # plt.plot(DATA.iloc[:, 1], label='NO2')
-    # plt.plot(DATA.iloc[:, 2], label='SO3')
-    #
-    # plt.legend()
-    # plt.show()
+    
+    
+def dataPlt(data):
+    #输出图表
+    plt.rcParams['font.sans-serif'] = ['KaiTi']
+    plt.rcParams['font.serif'] = ['KaiTi']
+    plt.rcParams['axes.unicode_minus'] = False
+    
+    plt.xlabel('时间（小时）')
+    plt.ylabel('标准化后的数据')
+    
+    plt.plot(data.iloc[:, 0], label='CO')
+    plt.plot(data.iloc[:, 1], label='NO2')
+    plt.plot(data.iloc[:, 2], label='SO3')
+    
+    plt.legend()
+    plt.show()
 
     return data
     # return DATA
 
 
-data = dataPreprocess()
-
-
-
+data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
