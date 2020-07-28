@@ -8,20 +8,25 @@ from matplotlib import pyplot as plt
 import dataPreprocessM as dprc
 
 
-def f(t,c):
-    y = 1 / (1+np.exp(-t*c))
+def f(lmd,c):
+    y = 1 / (1 + np.exp(-t*c))
     return y
 
 
 
-def errorLp(p,data_test,data_real):
+def errorLp(p,data_pre,data_real):
+    dist = np.linalg.norm(data_pre-data_real,ord=p)
+    return dist
     
 
-def jayaTrain(data_test,data_real):
+def jayaTrain(data_train_pre,data_train_real):
     
     
 
 
-def fcm(t,c):
+def fcm(t,e,lmd):
+    
+
+if "__main__":
     
     
