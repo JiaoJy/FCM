@@ -31,8 +31,8 @@ def topsiscode(data, matrix, sign):
         elif sign[i]=='-':
             vmax.append(dataset[dataset.columns[i]].min())
             vmin.append(dataset[dataset.columns[i]].max())
-    sp =[]
-    sn=[]
+    sp = []
+    sn = []
 
     for i in range(x):
         
@@ -52,6 +52,20 @@ def topsiscode(data, matrix, sign):
     final = pd.DataFrame(final,index=data.index,columns=['rank'])
     f = final.sort_values('rank',inplace=False,ascending=False)
     return(f)
+
+
+def seriesWeight(t_k,t_c):
+    s_w = [0]*t_k
+    mu = (1+t_k)/2
+    for i in range(1,t_k+1):
+        sigma_2 += (i-mu)**2
+    sigma_2 = 1/t_k * sigma
+    temp = 0
+    for i in range(1,k+1):
+        for j in range(1,t_k+1):
+            temp += exp((j-mu)**2/(2*sigma_2))
+        s_w[i] = exp((i-mu)**2/(2+sigma_2))/temp
+    return s_w
 
 if __name__ == "__main__":
     data = dprc.dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
