@@ -68,8 +68,8 @@ def dataPreprocess(path,file):
     data = imputer(data)
     data = outlier(data)
     data = normalization(data)
-    data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
-    
+    #data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
+    return data
     
 def dataPlt(data):
     #输出图表
@@ -90,5 +90,5 @@ def dataPlt(data):
     return data
     # return DATA
 
-
-data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
+#if __name__ == "__main__":
+#    data1 = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
