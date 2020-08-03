@@ -1,6 +1,7 @@
+import dataPreprocessM as dprc
+import numpy as np
+import pandas as pd
 def topsiscode(data, matrix, sign):
-    import numpy as np
-    import pandas as pd
     #dataset = pd.read_csv('data')    
     dataset = data
     x = dataset.shape[0]
@@ -12,13 +13,14 @@ def topsiscode(data, matrix, sign):
     for j in range(y):
         s.append(0)
         for i in range(x):
-            s[j] = s[j]+(dataset[i,j]*dataset[i,j])
+            s[j] = s[j]+(dataset[dataset.columns[j]].iloc[i])**2
         s[j]=np.sqrt(s[j])
 
-    for i in range(y):
-        for j in range(x):
-            mat2=(dataset[i,j]*matrix[i]/summ/s[i])
-            dataset.set_value(j, dataset.columns[i], mat2)
+    for j in range(y):
+        for i in range(x):
+            mat2=dataset[dataset.columns[j]].iloc[i]*matrix[j]/summ/s[j]
+            #dataset.set_value(i, dataset.columns[j], mat2)
+            dataset[dataset.columns[j]].iloc[i] = mat2
         vmax = []
         vmin =[]
 
@@ -33,11 +35,12 @@ def topsiscode(data, matrix, sign):
     sn=[]
 
     for i in range(x):
+        
         sp.append(0)
         sn.append(0)
         for j in range(y):
-            sp[i]=sp[i]+((dataset.get_value(i,j,takeable = 'True')-vmax[j])*(dataset.get_value(i,j,takeable = 'True')-vmax[j]))
-            sn[i]=sn[i]+((dataset.get_value(i,j,takeable = 'True')-vmin[j])*(dataset.get_value(i,j,takeable = 'True')-vmin[j]))
+            sp[i]=sp[i]+(dataset[dataset.columns[j]].iloc[i]-vmax[j])**2
+            sn[i]=sn[i]+(dataset[dataset.columns[j]].iloc[i]-vmin[j])**2
         sp[i]=np.sqrt(sp[i])
         sn[i]=np.sqrt(sn[i])
 
@@ -46,14 +49,13 @@ def topsiscode(data, matrix, sign):
         final.append(0)
         final[i]=sn[i]/(sn[i]+sp[i])
 
-    fianl = pd.DataFrame(final)
-    f = fianl.rank()
+    final = pd.DataFrame(final,index=data.index,columns=['rank'])
+    f = final.sort_values('rank',inplace=False,ascending=False)
     return(f)
 
 if __name__ == "__main__":
     data = dprc.dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
-    data = np.array(data)
-    #data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
+    print(data)
     matrix = [0.2,0.1,0.05,0.1,0.2,0.2,0.1,0.05]
     sign = ['-','+','-','+','-','-','+','-']
     print(topsiscode(data,matrix,sign))

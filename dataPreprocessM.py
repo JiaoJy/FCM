@@ -1,15 +1,10 @@
 # coding=utf-8
 
-import csv
 import numpy as np
 import pandas as pd
 import os
-from collections import Counter
-import datetime
-from sklearn import preprocessing
-from sklearn.impute import SimpleImputer
+
 import matplotlib.pyplot as plt
-from matplotlib import font_manager
 
 # 读取文件数据
 def read_file(path,name,date_column=9,index=9,header=0):
@@ -68,7 +63,7 @@ def dataPreprocess(path,file):
     data = imputer(data)
     data = outlier(data)
     data = normalization(data)
-    #data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
+    data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
     return data
     
 def dataPlt(data):
@@ -90,5 +85,5 @@ def dataPlt(data):
     return data
     # return DATA
 
-#if __name__ == "__main__":
-#    data1 = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
+if __name__ == "__main__":
+    data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
