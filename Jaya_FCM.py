@@ -9,7 +9,7 @@ import dataPreprocessM as dprc
 
 
 def f(lmd,c):
-    y = 1 / (1 + np.exp(-t*c))
+    y = 1 / (1 + np.exp(-lmd*c))
     return y
 
 
