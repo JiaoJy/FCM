@@ -15,12 +15,14 @@ def read_file(path,name,date_column=9,index=9,header=0):
 # 重新设置索引
 def reindex_datetime(data,freq="H"):
     data = data[~data.index.duplicated()]  # 去除重复索引
-    #print(data)
     rs = pd.date_range(data.index[0],data.index[-1],freq=freq) #生成时间索引(参数start、end)
     return data.reindex(rs)
 
 # 空缺位置补均值
 def imputer(data):
+    rs = pd.date_range(data.index[0],data.index[-1],freq='H')
+    newData = pd.DataFrame(c)
+    print(data.columns)
     data.columns = list(range(data.shape[1]))  # 列索引
     x = data.rolling(7,min_periods=1) # 时间滑动窗口
     xc = x.count()
@@ -87,3 +89,5 @@ def dataPlt(data):
 
 if __name__ == "__main__":
     data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
+    #data.to_csv('dataProcess.csv')
+    

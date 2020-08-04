@@ -34,8 +34,7 @@ def topsiscode(data, matrix, sign):
     sp = []
     sn = []
 
-    for i in range(x):
-        
+    for i in range(x):      
         sp.append(0)
         sn.append(0)
         for j in range(y):
@@ -48,23 +47,32 @@ def topsiscode(data, matrix, sign):
     for i in range(x):
         final.append(0)
         final[i]=sn[i]/(sn[i]+sp[i])
-
-    final = pd.DataFrame(final,index=data.index,columns=['rank'])
+        
+    s_w = seriesWeight(24,13)
+    for i in range(x/24):
+        for j in range(24):
+            final_date.append(0)
+            final_date[i] += s_w[j]*final[i*24+j]
+    
+    rs = pd.date_range(data.index[0],data.index[-1],freq='d')
+        
+    final_date = pd.DataFrame(final_date,index=rs,columns=['rank'])
     f = final.sort_values('rank',inplace=False,ascending=False)
     return(f)
 
 
 def seriesWeight(t_k,t_c):
     s_w = [0]*t_k
-    mu = (1+t_k)/2
-    for i in range(1,t_k+1):
+    t_f = 2*t_c-1
+    mu = t_c
+    for i in range(1,t_f+1):
         sigma_2 += (i-mu)**2
-    sigma_2 = 1/t_k * sigma
+    sigma_2 = sigma_2/t_f
     temp = 0
-    for i in range(1,k+1):
+    for i in range(1,t_k+1):
         for j in range(1,t_k+1):
             temp += exp((j-mu)**2/(2*sigma_2))
-        s_w[i] = exp((i-mu)**2/(2+sigma_2))/temp
+        s_w[i-1] = exp((i-mu)**2/(2+sigma_2))/temp
     return s_w
 
 if __name__ == "__main__":
