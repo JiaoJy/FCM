@@ -20,21 +20,14 @@ def reindex_datetime(data,freq="H"):
 
 # 空缺位置补均值
 def imputer(data):
-    rs = pd.date_range(data.index[0],data.index[-1],freq='H')
-    newData = pd.DataFrame(c)
-    print(data.columns)
     data.columns = list(range(data.shape[1]))  # 列索引
     x = data.rolling(7,min_periods=1) # 时间滑动窗口
-    xc = x.count()
     xm = x.mean()
-    id = data.index
-    # print(DATA.isnull().sum())
-
-    for i in id:
-        # print(xc.loc[str(i), 0])
-        if np.isnan(data.loc[str(i),0]):
-            data.loc[str(i)] = xm.loc[str(i)]
-
+    
+    for i in range(data.shape[0]):
+        for j in data.columns:
+            if np.isnan(data.iloc[i,j]):
+                data.iloc[i,j] = xm.iloc[i-2,j]
     return data.dropna()
 
 # 数据最大最小归一化
@@ -58,14 +51,14 @@ def outlier(data):
 
 def dataPreprocess(path,file):
     # 读取数据
-    data = read_file(path, file).iloc[:, [1,2,3,4,5,6,7,8]]
+    data = read_file(path, file).iloc[:, [1,2,3,4,5,6]]
     # DATA.columns = ['CO','NO2','SO3','O3','PM25','PM10','TEMPERATURE','HUMIDITY']
     # 数据加工
     data = reindex_datetime(data)
     data = imputer(data)
     data = outlier(data)
     data = normalization(data)
-    data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10', 'TEMPERATURE', 'HUMIDITY']
+    data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10']
     return data
     
 def dataPlt(data):

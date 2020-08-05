@@ -92,16 +92,16 @@ def fcm(e,lmd,data,time):
                     data_pre[t+1,i] += e[j,i]*data_pre[t,j]
             data_pre[t+1,i] += data_pre[t,i]
             data_pre[t+1,i] = f(lmd[i],data_pre[t+1,i])
-    return data_pre
+    return data_pre[:time]
           
 
 if __name__ == "__main__":
-    data = dprc.dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
+    data = pd.read_csv('dataProcess.csv',index_col = 0)
     data = np.array(data)
-    data_train = data[20:500,:]
-    data_test = data[500:600,:]
-    e,lmd = jayaTrain(data_train[20,:],data_train,479,8,4)
-    data_pre = fcm(e,lmd,data_test[0,:],99)
+    data_train = data[0:1200,:]   #50天做训练
+    data_test = data[1200:1680,:]     #20天做测试
+    e,lmd = jayaTrain(data_train[0,:],data_train,1200,8,npop = 4)
+    data_pre = fcm(e,lmd,data_test[0,:],480)
     print(errorLp(2,data_pre,data_test))
     
     
