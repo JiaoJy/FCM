@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-
 import pandas as pd
 import numpy as np
 import math
 from matplotlib import pyplot as plt
 import copy
 
-import dataPreprocessM as dprc
 
 
 def f(lmd,c):
@@ -27,7 +25,7 @@ def initialize_parameters_he(npop,N):
     parameters = np.zeros((npop,N*N))
     for i in range(npop):
         parameter = np.random.randn(N*(N-1)) * np.sqrt(2.0 / (N*(N-1)))
-        lmd = np.random.uniform(1,5,N)
+        lmd = np.random.uniform(1,3,N)
         parameters[i] = parameter.tolist()+lmd.tolist()
     return parameters
     
@@ -47,34 +45,32 @@ def rshape(X,N):
     
 def jayaTrain(c_data,c_real,time,N,npop=4):
     X = initialize_parameters_he(npop,N)
-    #print(X.shape)
-    for n in range(npop):
-        for i in range(N*N):
-            X[n,i] = X[0,i] + np.random.random()*(X[npop-1,i]-X[0,i])
+    # for n in range(npop):
+    #     for i in range(N*N):
+    #         X[n,i] = min(X[:,i]) + np.random.random()*(max(X[:,i])-min(X[:,i]))
     fitness = np.zeros(npop)
     error = np.zeros(npop)
     worst= 0
     best = 0
-    for num in range(500):
+    for num in range(1500):
         for n in range(npop):
             e,lmd = rshape(X[n,:],N)
-            print(e,lmd)
             c_pre = fcm(e,lmd,c_data,time)
             fitness[n] = h(errorLp(2,c_pre,c_real)) 
             error[n] = errorLp(2,c_pre,c_real)
         worst = fitness.tolist().index(min(fitness))
         best = fitness.tolist().index(max(fitness))
-        print(worst,best)
+        print(worst,best,fitness)
     
         Xx = np.zeros((npop,N*N))
         for n in range(npop):
             Xx[n,:] = X[n,:] + (X[best,:]-np.abs(X[n,:]))*np.random.random()-(X[worst,:]-np.abs(X[n,:]))*np.random.random()
             for i in range(N*N):
-                if Xx[n,i] < Xx[0,i]:
-                    Xx[n,i] = Xx[0,i]
-                if Xx[n,i] > Xx[npop-1,i]:
-                    Xx[n,i] = Xx[npop-1,i]
-            e,lmd = rshape(X[n,:],N)
+                if Xx[n,i] < min(Xx[:,i]):
+                    Xx[n,i] = min(Xx[:,i])
+                if Xx[n,i] > max(Xx[:,i]):
+                    Xx[n,i] = max(Xx[:,i])
+            e,lmd = rshape(Xx[n,:],N)
             c_pre = fcm(e,lmd,c_data,time)
             error2 = errorLp(2,c_pre,c_real)
             if error2 <= error[n]:
@@ -83,11 +79,12 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
     return e,lmd
        
 def fcm(e,lmd,data,time):
-    data_pre = np.zeros((time+1,len(data)))
+    c_len = len(data)
+    data_pre = np.zeros((time+1,c_len))
     data_pre[0] = data
     for t in range(0,time):
-        for i in range(len(data)):
-            for j in range(len(data)):
+        for i in range(c_len):
+            for j in range(c_len):
                 if i is not j :
                     data_pre[t+1,i] += e[j,i]*data_pre[t,j]
             data_pre[t+1,i] += data_pre[t,i]
@@ -100,7 +97,7 @@ if __name__ == "__main__":
     data = np.array(data)
     data_train = data[0:1200,:]   #50天做训练
     data_test = data[1200:1680,:]     #20天做测试
-    e,lmd = jayaTrain(data_train[0,:],data_train,1200,8,npop = 4)
+    e,lmd = jayaTrain(data_train[0,:],data_train,1200,6,npop = 4)
     data_pre = fcm(e,lmd,data_test[0,:],480)
     print(errorLp(2,data_pre,data_test))
     
