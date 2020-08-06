@@ -10,8 +10,8 @@ data1 = np.array(arr1)
 # data2 = pd.read_csv('ceshi5.csv',header=None)
 # data2 = np.array(data2)
 
-w = 504
-size = 50
+w = 504+480                         #前21天的数据
+size = 72
 data_real = data1[w:w + size, :]  # 测试集真实数据
 Num1=data_real.shape[0]                             #测试集行数189
 Num2=data_real.shape[1]                             #列数12
@@ -167,7 +167,7 @@ def RMSE(M):
     return dist
 
 
-for i in range(0, size):
+for i in range(480,480+size ):
 
 
     data = data1[i:i + w, :]                 # 训练集
@@ -215,7 +215,7 @@ for i in range(0, size):
     bestw = decode(bestroute)
     bestw = np.array(bestw).reshape(NC, NC)
 
-    data_pred[i] = caa(bestw,data_test)
+    data_pred[i-480] = caa(bestw,data_test)
 
 data_pre = np.array(data_pred)  # 预测出的数据
 Mwucha = MSE(data_pre, data_real)
@@ -242,9 +242,9 @@ temp = np.array(temp)
 temp = pd.DataFrame(temp)
 
 
-drawPre("CO",data_pre[:,0],data_real[:,0])
-drawPre("NO2",data_pre[:,1],data_real[:,1])
-drawPre("SO2",data_pre[:,2],data_real[:,2])
-drawPre("O3",data_pre[:,3],data_real[:,3])
-drawPre("PM25",data_pre[:,4],data_real[:,4])
-drawPre("PM10",data_pre[:,5],data_real[:,5])
+drawPre("CO",data_pre[:,0],data_real[:,0],dataNum=size)
+drawPre("NO2",data_pre[:,1],data_real[:,1],dataNum=size)
+drawPre("SO2",data_pre[:,2],data_real[:,2],dataNum=size)
+drawPre("O3",data_pre[:,3],data_real[:,3],dataNum=size)
+drawPre("PM25",data_pre[:,4],data_real[:,4],dataNum=size)
+drawPre("PM10",data_pre[:,5],data_real[:,5],dataNum=size)

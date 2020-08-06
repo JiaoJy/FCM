@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 import copy
 
 def f(lmd,c):
-    y = 1 / (1 + np.exp(-1*c))
+    y = 1 / (1 + np.exp(-lmd*c))
     return y
 
 def h(err):
@@ -43,14 +43,15 @@ def rshape(X,N):
     
 def jayaTrain(c_data,c_real,time,N,npop=4):
     X = initialize_parameters_he(npop,N)
-    # for n in range(npop):
-    #     for i in range(N*N):
-    #         X[n,i] = min(X[:,i]) + np.random.random()*(max(X[:,i])-min(X[:,i]))
+#    for n in range(npop):
+#        for i in range(N*N):
+#            X[n,i] = min(X[:,i]) + np.random.random()*(max(X[:,i])-min(X[:,i]))
     fitness = np.zeros(npop)
     error = np.zeros(npop)
     worst= 0
     best = 0
-    for num in range(500):
+    error_time = []
+    for num in range(300):
         for n in range(npop):
             e,lmd = rshape(X[n,:],N)
             c_pre = fcm(e,lmd,c_data,time)
@@ -72,9 +73,10 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
             c_pre = fcm(e,lmd,c_data,time)
             error2 = errorLp(2,c_pre,c_real)
             if error2 <= error[n]:
-                X[n,:] = Xx[n,:]
+                X[n,:] = Xx[n,:]              
+        error_time.append(error[best])
     e,lmd = rshape(X[best,:],N)
-    return e,lmd
+    return e,lmd,error_time
        
 def fcm(e,lmd,data,time):
     c_len = len(data)
@@ -90,7 +92,7 @@ def fcm(e,lmd,data,time):
     return data_pre[:time]
 
 #%%
-def drawPre(title,preData,realData,dataNum=120):
+def drawPre(title,preData,realData,dataNum=50):
     plt.title(title)
     plt.plot(range(dataNum), preData, color='green', label='predict');
     plt.plot(range(dataNum), realData, color='red', label='real');
@@ -98,20 +100,49 @@ def drawPre(title,preData,realData,dataNum=120):
     plt.xlabel('time');
     plt.ylabel('value');
     plt.show();        
+    
+def dataErr(data,label='none'):
+    #输出图表
+    
+    plt.xlabel('时间（天）')
+    plt.ylabel('lost')
+    
+    plt.plot(data, label=label)
+    
+    plt.legend()
+    plt.show()
 #%%
 if __name__ == "__main__":
     data = pd.read_csv('dataProcess.csv',index_col = 0)
     data = np.array(data)
-    data_train = data[240:480,:]   #50天做训练
-    data_test = data[480:600,:]     #20天做测试
-    e,lmd = jayaTrain(data_train[0,:],data_train,240,6,npop = 8)
-    data_pre = fcm(e,lmd,data_test[0,:],120)
+    data_train = data[240:600,:]   #20天做训练
+    data_test = data[576:648,:]     #3天做测试
+    
+    size = 24
+    train_days = int(data_train.shape[0]/24)
+    pre_days = int(data_test.shape[0]/24)
+    data_pre = np.zeros((data_test.shape[0],data_test.shape[1]))
+    for i in range(24):
+        tmp = []
+        for j in range(train_days):
+            tmp.append(data_train[i+24*j])
+        train_tmp = np.array(tmp) 
+        e,lmd,error_time = jayaTrain(train_tmp[0,:],train_tmp,train_days,data.shape[1],npop = 8)
+        if i == 23:
+            dataErr(error_time,label='收敛程度')
+        pre_tmp = fcm(e,lmd,data_test[i],pre_days)
+        for k in range(pre_days):
+            data_pre[i+24*k,:] = pre_tmp[k,:]
+            
+#    e,lmd = jayaTrain(data_train[0,:],data_train,240,6,npop = 8)
+#    data_pre = fcm(e,lmd,data_test[0,:],50)
     print(errorLp(2,data_pre,data_test))
-    drawPre("CO",data_pre[:,0],data_test[:,0])
-    drawPre("NO2",data_pre[:,1],data_test[:,1])
-    drawPre("SO2",data_pre[:,2],data_test[:,2])
-    drawPre("O3",data_pre[:,3],data_test[:,3])
-    drawPre("PM25",data_pre[:,4],data_test[:,4])
-    drawPre("PM10",data_pre[:,5],data_test[:,5])
+    drawPre("CO",data_pre[:,0],data_test[:,0],dataNum = data_test.shape[0])
+    drawPre("NO2",data_pre[:,1],data_test[:,1],dataNum = data_test.shape[0])
+    drawPre("SO2",data_pre[:,2],data_test[:,2],dataNum = data_test.shape[0])
+    drawPre("O3",data_pre[:,3],data_test[:,3],dataNum = data_test.shape[0])
+    drawPre("PM25",data_pre[:,4],data_test[:,4],dataNum = data_test.shape[0])
+    drawPre("PM10",data_pre[:,5],data_test[:,5],dataNum = data_test.shape[0])
+    
     
     

@@ -62,26 +62,26 @@ def dataPreprocess(path,file):
     #data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25']
     return data
     
-def dataPlt(data):
+def dataPlt(data,label='none'):
     #输出图表
-    plt.rcParams['font.sans-serif'] = ['KaiTi']
-    plt.rcParams['font.serif'] = ['KaiTi']
-    plt.rcParams['axes.unicode_minus'] = False
     
     plt.xlabel('时间（小时）')
-    plt.ylabel('标准化后的数据')
+    plt.ylabel('最大最小归一化')
     
-    plt.plot(data.iloc[:, 0], label='CO')
-    plt.plot(data.iloc[:, 1], label='NO2')
-    plt.plot(data.iloc[:, 2], label='SO3')
+    plt.plot(data, label=label)
     
     plt.legend()
     plt.show()
 
-    return data
+    #return data
     # return DATA
 
 if __name__ == "__main__":
     data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
-    data.to_csv('dataProcessM.csv')
-    
+    #data.to_csv('dataProcessM.csv')
+    dataPlt(data.iloc[:, 0], label='CO')
+    dataPlt(data.iloc[:, 1], label='NO2')
+    dataPlt(data.iloc[:, 2] ,label='SO3')
+    dataPlt(data.iloc[:, 3] ,label='O3')
+    dataPlt(data.iloc[:, 4] ,label='PM25')
+    dataPlt(data.iloc[:, 5] ,label='PM10')
