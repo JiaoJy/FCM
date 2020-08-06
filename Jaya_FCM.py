@@ -5,10 +5,8 @@ import math
 from matplotlib import pyplot as plt
 import copy
 
-
-
 def f(lmd,c):
-    y = 1 / (1 + np.exp(-lmd*c))
+    y = 1 / (1 + np.exp(-1*c))
     return y
 
 def h(err):
@@ -16,7 +14,7 @@ def h(err):
     return y
 
 def errorLp(p,data_pre,data_real):
-    dist = np.linalg.norm(data_pre-data_real,ord=p)
+    dist = np.linalg.norm(data_pre-data_real,ord=p)/(data_pre.shape[0]*data_pre.shape[1])
     return dist
   
 
@@ -52,7 +50,7 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
     error = np.zeros(npop)
     worst= 0
     best = 0
-    for num in range(1500):
+    for num in range(500):
         for n in range(npop):
             e,lmd = rshape(X[n,:],N)
             c_pre = fcm(e,lmd,c_data,time)
@@ -90,15 +88,30 @@ def fcm(e,lmd,data,time):
             data_pre[t+1,i] += data_pre[t,i]
             data_pre[t+1,i] = f(lmd[i],data_pre[t+1,i])
     return data_pre[:time]
-          
 
+#%%
+def drawPre(title,preData,realData,dataNum=180):
+    plt.title(title)
+    plt.plot(range(dataNum), preData, color='green', label='predict');
+    plt.plot(range(dataNum), realData, color='red', label='real');
+    plt.legend();
+    plt.xlabel('time');
+    plt.ylabel('value');
+    plt.show();        
+#%%
 if __name__ == "__main__":
     data = pd.read_csv('dataProcess.csv',index_col = 0)
     data = np.array(data)
-    data_train = data[0:1200,:]   #50天做训练
-    data_test = data[1200:1680,:]     #20天做测试
-    e,lmd = jayaTrain(data_train[0,:],data_train,1200,6,npop = 4)
-    data_pre = fcm(e,lmd,data_test[0,:],480)
+    data_train = data[600:1200,:]   #50天做训练
+    data_test = data[1200:1380,:]     #20天做测试
+    e,lmd = jayaTrain(data_train[0,:],data_train,600,6,npop = 8)
+    data_pre = fcm(e,lmd,data_test[0,:],180)
     print(errorLp(2,data_pre,data_test))
+    drawPre("CO",data_pre[:,0],data_test[:,0])
+    drawPre("NO2",data_pre[:,1],data_test[:,1])
+    drawPre("SO2",data_pre[:,2],data_test[:,2])
+    drawPre("O3",data_pre[:,3],data_test[:,3])
+    drawPre("TEMPERATURE",data_pre[:,4],data_test[:,4])
+    drawPre("HUMIDITY",data_pre[:,5],data_test[:,5])
     
     

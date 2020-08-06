@@ -2,9 +2,10 @@ import pandas as pd
 import numpy as np
 import math
 from matplotlib import pyplot as plt
+from Jaya_FCM import drawPre
 
 from numpy import random
-arr1 = pd.read_csv('1anhui.csv',header=None)
+arr1 = pd.read_csv('dataProcessM.csv',index_col = 0)
 data1 = np.array(arr1)
 # data2 = pd.read_csv('ceshi5.csv',header=None)
 # data2 = np.array(data2)
@@ -216,14 +217,12 @@ for i in range(0, size):
 
     data_pred[i] = caa(bestw,data_test)
 
-
-
-A1 = np.array(data_pred)  # 预测出的数据
-Mwucha = MSE(A1, data_real)
+data_pre = np.array(data_pred)  # 预测出的数据
+Mwucha = MSE(data_pre, data_real)
 Rwucha = RMSE(Mwucha)
 
-jd = jdwucha(A1, data_real)
-xd = xdwucha(A1, data_real)
+jd = jdwucha(data_pre, data_real)
+xd = xdwucha(data_pre, data_real)
 
 # print(bestw)
 print('绝对误差：{}'.format(jd))
@@ -241,4 +240,11 @@ temp[3] = Mwucha
 temp[4] = Rwucha
 temp = np.array(temp)
 temp = pd.DataFrame(temp)
-temp.to_csv('ACO_9yue_anhui.csv' , header=None)
+
+
+drawPre("CO",data_pre[:,0],data_real[:,0])
+drawPre("NO2",data_pre[:,1],data_real[:,1])
+drawPre("SO2",data_pre[:,2],data_real[:,2])
+drawPre("O3",data_pre[:,3],data_real[:,3])
+drawPre("PM25",data_pre[:,4],data_real[:,4])
+drawPre("PM10",data_pre[:,5],data_real[:,5])
