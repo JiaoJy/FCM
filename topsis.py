@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
 import math
+import copy
 def topsiscode(data, matrix, sign):
     #dataset = pd.read_csv('data')    
-    dataset = data
+    dataset = copy.copy(data)
     x = dataset.shape[0]
     y = dataset.shape[1]
 
@@ -64,21 +65,35 @@ def topsiscode(data, matrix, sign):
 def seriesWeight(t_k,t_c):
     s_w = [0]*t_k
     t_f = 2*t_c-1
+    print(t_f)
     mu = t_c
     sigma_2 = 0
     for i in range(1,t_f+1):
         sigma_2 += (i-mu)**2
     sigma_2 = sigma_2/t_f
+    print(sigma_2)
     temp = 0
-    for i in range(1,t_k+1):
-        for j in range(1,t_k+1):
-            temp += math.exp((j-mu)**2/(2*sigma_2))
-        s_w[i-1] = math.exp((i-mu)**2/(2+sigma_2))/temp
+    for j in range(1,t_f+1):
+        temp += math.exp(-(j-mu)**2/(2*sigma_2))
+    for i in range(1,t_k+1):            
+        s_w[i-1] = math.exp(-(i-mu)**2/(2*sigma_2))/temp
     return s_w
 
+def final(s_w,final_data):
+    data = 0
+    for i in range(len(s_w)):
+        data += s_w[i]*final_data.iloc[i]
+    return data   
 if __name__ == "__main__":
-    data = pd.read_csv('dataProcess.csv',index_col = 0)
+    data_pre = pd.read_csv('data_train.csv',index_col = 0)
+    data_pre = data_pre.iloc[408:576]
+    data_real = pd.read_csv('dataProcess.csv',index_col = 0)
+    data_real = data_real.iloc[408:576]
     matrix = [0.2,0.1,0.1,0.1,0.3,0.2]
     sign = ['-','-','-','-','-','-']
-    rank ,final_date =topsiscode(data,matrix,sign)
+    rank_pre ,final_date_pre =topsiscode(data_pre,matrix,sign)
+    rank_real,final_date_real=topsiscode(data_real,matrix,sign)
+    s_w = seriesWeight(7,4)
+    final_pre = final(s_w,final_date_pre)
+    final_real = final(s_w,final_date_real)
     
