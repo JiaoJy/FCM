@@ -5,14 +5,15 @@ from matplotlib import pyplot as plt
 from Jaya_FCM import drawPre
 
 from numpy import random
-arr1 = pd.read_csv('dataProcessM.csv',index_col = 0)
+arr1 = pd.read_csv('dataProcess.csv',index_col = 0)
 data1 = np.array(arr1)
 # data2 = pd.read_csv('ceshi5.csv',header=None)
 # data2 = np.array(data2)
 
-w = 504+480                         #前21天的数据
+w = 504                        #前21天的数据
+arr1.iloc[0:w,:].to_csv('data_train.csv')
 size = 72
-data_real = data1[w:w + size, :]  # 测试集真实数据
+data_real = data1[w:w+size, :]  # 测试集真实数据
 Num1=data_real.shape[0]                             #测试集行数189
 Num2=data_real.shape[1]                             #列数12
 MAXIT = 20                                         #最大循环次数
@@ -167,7 +168,7 @@ def RMSE(M):
     return dist
 
 
-for i in range(480,480+size ):
+for i in range(0,0+size ):
 
 
     data = data1[i:i + w, :]                 # 训练集
@@ -215,7 +216,7 @@ for i in range(480,480+size ):
     bestw = decode(bestroute)
     bestw = np.array(bestw).reshape(NC, NC)
 
-    data_pred[i-480] = caa(bestw,data_test)
+    data_pred[i] = caa(bestw,data_test)
 
 data_pre = np.array(data_pred)  # 预测出的数据
 Mwucha = MSE(data_pre, data_real)
@@ -241,6 +242,8 @@ temp[4] = Rwucha
 temp = np.array(temp)
 temp = pd.DataFrame(temp)
 
+data_pre = pd.DataFrame(data_pre)
+data_pre.to_csv('data_pre.csv')
 
 drawPre("CO",data_pre[:,0],data_real[:,0],dataNum=size)
 drawPre("NO2",data_pre[:,1],data_real[:,1],dataNum=size)

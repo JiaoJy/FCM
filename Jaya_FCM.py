@@ -115,13 +115,25 @@ def dataErr(data,label='none'):
 if __name__ == "__main__":
     data = pd.read_csv('dataProcess.csv',index_col = 0)
     data = np.array(data)
+    wind = 504               #设置滑动窗口
+    start = 0
+    hour = 72   
+    
     data_train = data[240:600,:]   #20天做训练
-    data_test = data[576:648,:]     #3天做测试
+    data_test = data[start:start+hour,:]     #3天做测试
     
     size = 24
     train_days = int(data_train.shape[0]/24)
     pre_days = int(data_test.shape[0]/24)
     data_pre = np.zeros((data_test.shape[0],data_test.shape[1]))
+    
+      
+    for i in range(start,start+hour):
+        data_train = data[i:i+wind,:]
+        data_real = data[i+wind-1,:]
+        e.lmd,error_time = javaTrain(data_train[0,:],data_train,wind,data.shape[1],npop = 8)
+        data_real = fcm(e,lmd,data_test)
+    
     for i in range(24):
         tmp = []
         for j in range(train_days):
