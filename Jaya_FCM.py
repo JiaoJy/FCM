@@ -17,13 +17,14 @@ def errorLp(p,data_pre,data_real):
     dist = np.linalg.norm(data_pre-data_real,ord=p)/(data_pre.shape[0]*data_pre.shape[1])
     return dist
   
-
+#%%
 #返回初始化权重参数   NxN 
 def initialize_parameters_he(npop,N):
     parameters = np.zeros((npop,N*N))
     for i in range(npop):
         parameter = np.random.randn(N*(N-1)) * np.sqrt(2.0 / (N*(N-1)))
-        lmd = np.random.uniform(1,3,N)
+        #lmd = np.random.uniform(1,3,N)
+        lmd = np.array([1]*N)
         parameters[i] = parameter.tolist()+lmd.tolist()
     return parameters
     
@@ -41,6 +42,7 @@ def rshape(X,N):
                 num = num + 1
     return e,lmd
     
+#jaya学习算法训练FCM参数
 def jayaTrain(c_data,c_real,time,N,npop=4):
     X = initialize_parameters_he(npop,N)
 #    for n in range(npop):
@@ -51,7 +53,7 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
     worst= 0
     best = 0
     error_time = []
-    for num in range(300):
+    for num in range(500):
         for n in range(npop):
             e,lmd = rshape(X[n,:],N)
             c_pre = fcm(e,lmd,c_data,time)
@@ -59,7 +61,7 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
             error[n] = errorLp(2,c_pre,c_real)
         worst = fitness.tolist().index(min(fitness))
         best = fitness.tolist().index(max(fitness))
-        print(worst,best,fitness)
+        #print(worst,best,fitness)
     
         Xx = np.zeros((npop,N*N))
         for n in range(npop):
@@ -77,7 +79,8 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
         error_time.append(error[best])
     e,lmd = rshape(X[best,:],N)
     return e,lmd,error_time
-       
+
+#模糊认知图递推过程      
 def fcm(e,lmd,data,time):
     c_len = len(data)
     data_pre = np.zeros((time+1,c_len))
@@ -89,7 +92,7 @@ def fcm(e,lmd,data,time):
                     data_pre[t+1,i] += e[j,i]*data_pre[t,j]
             data_pre[t+1,i] += data_pre[t,i]
             data_pre[t+1,i] = f(lmd[i],data_pre[t+1,i])
-    return data_pre[:time]
+    return data_pre[1:]
 
 #%%
 def drawPre(title,preData,realData,dataNum=50):
@@ -104,7 +107,7 @@ def drawPre(title,preData,realData,dataNum=50):
 def dataErr(data,label='none'):
     #输出图表
     
-    plt.xlabel('时间（天）')
+    plt.xlabel('time(day)')
     plt.ylabel('lost')
     
     plt.plot(data, label=label)
@@ -115,36 +118,22 @@ def dataErr(data,label='none'):
 if __name__ == "__main__":
     data = pd.read_csv('dataProcess.csv',index_col = 0)
     data = np.array(data)
-    wind = 504               #设置滑动窗口
+    train_time = 504               #设置滑动窗口
     start = 0
     hour = 72   
+    concept = data.shape[1]
     
     data_train = data[240:600,:]   #20天做训练
     data_test = data[start:start+hour,:]     #3天做测试
     
-    size = 24
-    train_days = int(data_train.shape[0]/24)
-    pre_days = int(data_test.shape[0]/24)
+    
     data_pre = np.zeros((data_test.shape[0],data_test.shape[1]))
-    
-      
     for i in range(start,start+hour):
-        data_train = data[i:i+wind,:]
-        data_real = data[i+wind-1,:]
-        e.lmd,error_time = javaTrain(data_train[0,:],data_train,wind,data.shape[1],npop = 8)
-        data_real = fcm(e,lmd,data_test)
-    
-    for i in range(24):
-        tmp = []
-        for j in range(train_days):
-            tmp.append(data_train[i+24*j])
-        train_tmp = np.array(tmp) 
-        e,lmd,error_time = jayaTrain(train_tmp[0,:],train_tmp,train_days,data.shape[1],npop = 8)
-        if i == 23:
-            dataErr(error_time,label='收敛程度')
-        pre_tmp = fcm(e,lmd,data_test[i],pre_days)
-        for k in range(pre_days):
-            data_pre[i+24*k,:] = pre_tmp[k,:]
+        data_train = data[i:i+train_time,:]
+        data_real = data[i+train_time-1,:]
+        e,lmd,error_time = jayaTrain(data[i-1,:],data_train,train_time,concept,npop = 8)
+        data_pre[i-data_pre.shape[0]] = fcm(e,lmd,data_real,1)
+
             
 #    e,lmd = jayaTrain(data_train[0,:],data_train,240,6,npop = 8)
 #    data_pre = fcm(e,lmd,data_test[0,:],50)
@@ -155,6 +144,3 @@ if __name__ == "__main__":
     drawPre("O3",data_pre[:,3],data_test[:,3],dataNum = data_test.shape[0])
     drawPre("PM25",data_pre[:,4],data_test[:,4],dataNum = data_test.shape[0])
     drawPre("PM10",data_pre[:,5],data_test[:,5],dataNum = data_test.shape[0])
-    
-    
-    
