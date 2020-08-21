@@ -67,7 +67,7 @@ def dataPlt(data,label='none'):
     
     plt.xlabel('时间（小时）')
     plt.ylabel('最大最小归一化')
-    
+    plt.title(label)
     plt.plot(data, label=label)
     
     plt.legend()
@@ -78,7 +78,7 @@ def dataPlt(data,label='none'):
 
 if __name__ == "__main__":
     data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
-    #data.to_csv('dataProcessM.csv')
+    data.to_csv('dataProcess.csv')
     dataPlt(data.iloc[:, 0], label='CO')
     dataPlt(data.iloc[:, 1], label='NO2')
     dataPlt(data.iloc[:, 2] ,label='SO3')

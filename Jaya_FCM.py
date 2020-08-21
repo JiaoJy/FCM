@@ -111,7 +111,7 @@ def dataErr(data,label='none'):
     
     plt.legend()
     plt.show()
-#%%
+#%% 
 if __name__ == "__main__":
     data = pd.read_csv('dataProcess.csv',index_col = 0)
     data = np.array(data)

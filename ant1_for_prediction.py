@@ -11,7 +11,7 @@ data1 = np.array(arr1)
 # data2 = np.array(data2)
 
 w = 504                        #前21天的数据
-arr1.iloc[0:w,:].to_csv('data_train.csv')
+#arr1.iloc[0:w,:].to_csv('data_train.csv')
 size = 72
 data_real = data1[w:w+size, :]  # 测试集真实数据
 Num1=data_real.shape[0]                             #测试集行数189
@@ -139,8 +139,6 @@ def jdwucha(A1,data2):
 
 def xdwucha(data1,data2):                 #data1是预测的矩阵；data2是要做比较的真实矩阵
 
-
-    # dist = [0] * Num2
     dist_temp = (np.abs((data1 - data2)/data2))/(Num1)
     dist = dist_temp.sum(axis=0)
     return dist
@@ -150,7 +148,6 @@ def caa(W,data):
     for o in range (0,a):
         temp = np.dot(data,W)
         A2 = f(temp)
-
 
     return A2
 
@@ -242,8 +239,8 @@ temp[4] = Rwucha
 temp = np.array(temp)
 temp = pd.DataFrame(temp)
 
-data_pre = pd.DataFrame(data_pre)
-data_pre.to_csv('data_pre.csv')
+#data_pre = pd.DataFrame(data_pre)
+#data_pre.to_csv('data_pre.csv')
 
 drawPre("CO",data_pre[:,0],data_real[:,0],dataNum=size)
 drawPre("NO2",data_pre[:,1],data_real[:,1],dataNum=size)
