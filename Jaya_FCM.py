@@ -23,8 +23,8 @@ def initialize_parameters_he(npop,N):
     parameters = np.zeros((npop,N*N))
     for i in range(npop):
         parameter = np.random.randn(N*(N-1)) * np.sqrt(2.0 / (N*(N-1)))
-        #lmd = np.random.uniform(1,3,N)
-        lmd = np.array([1]*N)
+        lmd = np.random.uniform(0,1,N)
+        #lmd = np.array([1]*N)
         parameters[i] = parameter.tolist()+lmd.tolist()
     return parameters
     
@@ -61,7 +61,7 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
             error[n] = errorLp(2,c_pre,c_real)
         worst = fitness.tolist().index(min(fitness))
         best = fitness.tolist().index(max(fitness))
-        #print(worst,best,fitness)
+        print(worst,best,fitness)
     
         Xx = np.zeros((npop,N*N))
         for n in range(npop):
@@ -72,7 +72,7 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
                 if Xx[n,i] > max(Xx[:,i]):
                     Xx[n,i] = max(Xx[:,i])
             e,lmd = rshape(Xx[n,:],N)
-            c_pre = fcm(e,lmd,c_data,time)
+            c_pre = fcm(e,lmd,c_data,1)
             error2 = errorLp(2,c_pre,c_real)
             if error2 <= error[n]:
                 X[n,:] = Xx[n,:]              
