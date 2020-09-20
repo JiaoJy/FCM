@@ -33,10 +33,6 @@ a = 1                                      #预测未来一小时的
 
 data_pred = [0]*size
 
-# h = np.ones(1,10)
-# h[4] = 2                                          #增大选择权重取0的概率；但我不知道在这个问题中有没有必要
-
-
 
 def code(w):
     w = np.array(w).reshape(1,NC*NC)
