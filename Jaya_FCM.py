@@ -4,8 +4,10 @@ import numpy as np
 import math
 from matplotlib import pyplot as plt
 import copy
+import scipy
 
 def f(lmd,c):
+    # return scipy.special.expit(-lmd*c)
     y = 1 / (1 + np.exp(-lmd*c))
     return y
 
@@ -72,7 +74,7 @@ def jayaTrain(c_data,c_real,time,N,npop=4):
                 if Xx[n,i] > max(Xx[:,i]):
                     Xx[n,i] = max(Xx[:,i])
             e,lmd = rshape(Xx[n,:],N)
-            c_pre = fcm(e,lmd,c_data,1)
+            c_pre = fcm(e,lmd,c_data,time)
             error2 = errorLp(2,c_pre,c_real)
             if error2 <= error[n]:
                 X[n,:] = Xx[n,:]              
@@ -120,10 +122,10 @@ if __name__ == "__main__":
     data = np.array(data)
     train_time = 504               #设置滑动窗口
     start = 0
-    hour = 72   
+    hour = 500   
     concept = data.shape[1]
     
-    data_train = data[240:600,:]   #20天做训练
+    #data_train = data[240:600,:]   #20天做训练
     data_test = data[start:start+hour,:]     #3天做测试
     
     
@@ -131,7 +133,7 @@ if __name__ == "__main__":
     for i in range(start,start+hour):
         data_train = data[i:i+train_time,:]
         data_real = data[i+train_time-1,:]
-        e,lmd,error_time = jayaTrain(data[i-1,:],data_train,train_time,concept,npop = 8)
+        e,lmd,error_time = jayaTrain(data[i-1,:],data_train,1,concept,npop = 8)
         data_pre[i-data_pre.shape[0]] = fcm(e,lmd,data_real,1)
 
             
