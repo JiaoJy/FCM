@@ -57,7 +57,7 @@ def dataPreprocess(path,file):
     data = reindex_datetime(data)
     data = imputer(data)
     data = outlier(data)
-    data = normalization(data)
+    #data = normalization(data)
     data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25', 'PM10']
     #data.columns = ['CO', 'NO2', 'SO3', 'O3', 'PM25']
     return data
@@ -78,7 +78,7 @@ def dataPlt(data,label='none'):
 
 if __name__ == "__main__":
     data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
-    data.to_csv('dataProcess.csv')
+    data.to_csv('undataProcess.csv')
     dataPlt(data.iloc[:, 0], label='CO')
     dataPlt(data.iloc[:, 1], label='NO2')
     dataPlt(data.iloc[:, 2] ,label='SO3')
