@@ -4,46 +4,6 @@ import math
 from matplotlib import pyplot as plt
 from numpy import random
 
-
-def jdwucha(A1,data2):
-    dist_temp = np.abs(A1 - data2) / (data2.shape[0])
-    dist = dist_temp.sum(axis=0)
-    return dist
-
-def xdwucha(data1,data2):                 #data1是预测的矩阵；data2是要做比较的真实矩阵
-    dist_temp = (np.abs((data1 - data2)/data2))/(data2.shape[0])
-    dist = dist_temp.sum(axis=0)
-    return dist
-
-def MSE(A1,data2):
-    dist_temp = (np.power((A1 - data2),2))/data2.shape[0]
-    dist = dist_temp.sum(axis=0)
-    return dist
-
-def RMSE(M):
-    dist = np.power(M,0.5)
-    return dist
-
-def fanguiy(A1):#反归一化
-    A2 = A1.copy()
-    for j in range(0,A1.shape[1]):
-        madata = max(data[:, j])
-        midata = min(data[:, j])
-        A2[:,j] = A1[:,j] * (madata - midata) + midata
-
-    return A2
-
-#%%
-def drawPre(title,preData,realData,dataNum=10):
-    plt.title(title)
-    plt.plot(range(dataNum), preData, color='green', label='predict');
-    plt.plot(range(dataNum), realData, color='red', label='real');
-    plt.legend();
-    plt.xlabel('time');
-    plt.ylabel('value');
-    plt.show();
-
-
 def errorLp(W,data,data_front,time):
     A1 = cala(W,data,data_front,time)                 #更新后的矩阵
     dist = np.linalg.norm(A1 - data)/ItemNum1         #预测矩阵与真实矩阵的欧式距离
@@ -124,12 +84,12 @@ def newA(BESTW,A,data,data_front ,k,m):
 
     BESTWtemp,j,p = initialization(pop_size, A, data, data_front)
     if j<=k:
-        BESTW = BESTWtemp           #留下每一代最好的权重矩阵
+        BESTW = BESTWtemp  #留下每一代最好的权重矩阵
+        k = j
     A[p] = BESTW
-    return A,BESTW
+    return A,BESTW,k
 
-
-arr1 = pd.read_csv('dataProcess.csv', index_col=0)
+arr1 = pd.read_csv('dataProcess.csv',index_col = 0)
 data1 = np.array(arr1)
 if __name__ == '__main__':
     pop_size = 8  # 初始种群个数
@@ -137,41 +97,65 @@ if __name__ == '__main__':
     pop_mr = 0.3  # 变异概率
     pop_ma = 1  # 变异系数
     iternum = 100
-    w = 504  # 滑动窗口大小
-    a = 1  # 预测未来一小时的
+    w = 504        #滑动窗口大小
+    a = 1      #预测未来一小时的
     start = 0
-    dataf = pd.read_csv('dataProcess.csv', index_col=0)
-    data2 = dataf.iloc[w + start:w + iternum + start, :]
+    dataf = pd.read_csv('dataProcess.csv',index_col = 0)
+    data2 = dataf.iloc[w + start:w + iternum + start,:]
 
-    Num1 = data2.shape[0]  # 测试集行数100
-    Num2 = data2.shape[1]  # 列数6
+    Num1=data2.shape[0]                             #测试集行数100
+    Num2=data2.shape[1]                             #列数6
 
-    data_pred = [0] * iternum
-
-    for i in range(0, iternum):
-        t = 0
-        BESTW = [0]
-
-        # print(i)
-        data = data1[i + start:i + start + w, :]
-
-        data_front = data1[i + start - 1]
-        # print(data_front)
+    data_pred = [0]*iternum
+    
+    data = data1[start:start+ w, :]    
+    data_front = data1[start-1]
+    ItemNum1 = data.shape[0]  # 训练集行数504
+    ItemNum2 = data.shape[1]  # 列数6
+    
+    ed = [0]*800
+    #训练
+    A = [0] * pop_size  # 初始种群
+    for j in range(pop_size):
+        #A[j] = -1 + 2 * np.random.random((ItemNum2, ItemNum2))
+        A[j] = -1 + 2 * np.random.uniform(0,1,(ItemNum2, ItemNum2))
+    
+    bestw, k, m = initialization(pop_size, A, data, data_front)
+    for op in range(800):
+        A, bestw,k = newA(bestw, A, data, data_front, k, m)
+        ed[op] = k
+        
+    #预测
+    for i in range(0,iternum):
+        #t = 0
+        #BESTW = [0]
+        '''
+        #print(i)
+        data = data1[i+start:i +start+ w, :]
+        
+        data_front = data1[i+start-1]
+        #print(data_front)
         ItemNum1 = data.shape[0]  # 训练集行数504
         ItemNum2 = data.shape[1]  # 列数6
 
         A = [0] * pop_size  # 初始种群
-
         for j in range(pop_size):
-            # A[j] = -1 + 2 * np.random.random((ItemNum2, ItemNum2))
-            A[j] = -1 + 2 * np.random.uniform(0, 1, (ItemNum2, ItemNum2))
-
-        # print(str(len(A[0])),data.shape,data_front.shape)
-
+            #A[j] = -1 + 2 * np.random.random((ItemNum2, ItemNum2))
+            A[j] = -1 + 2 * np.random.uniform(0,1,(ItemNum2, ItemNum2))
+        
         bestw, k, m = initialization(pop_size, A, data, data_front)
-        for op in range(1):
+        for op in range(500):
             A, bestw = newA(bestw, A, data, data_front, k, m)
+        '''
+        
+        data_test = data1[i + start + w-1]  # 测试输入
+        data_pred[i] = cala1(bestw,data_test)
+    #print(bestw)                  # 最优权重矩阵展示
 
-        data_test = data1[i + start + w - 1]  # 测试输入
-        data_pred[i] = cala1(bestw, data_test)
+    #最优权重矩阵做预测
+    data_pre = np.array(data_pred)                    #预测出的数据
+    data_test = np.array(data2)
+    #A1 = fanguiy(A1)                           #反归一化后的预测数据
 
+    drawAll(data_pre,data_test)
+    result(data_pre,data_test,'rcga')
