@@ -3,6 +3,12 @@ import numpy as np
 import math
 from matplotlib import pyplot as plt
 from numpy import random
+from errorResult import MSE
+from errorResult import RMSE
+from errorResult import jdwucha
+from errorResult import xdwucha
+from errorResult import result
+from errorResult import drawAll
 
 def errorLp(W,data,data_front,time):
     A1 = cala(W,data,data_front,time)                 #更新后的矩阵

@@ -77,8 +77,9 @@ def dataPlt(data,label='none'):
     # return DATA
 
 if __name__ == "__main__":
-    data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
-    data.to_csv('dataProcess.csv')
+    #data = dataPreprocess("数据20171205\数据\沧州渤海临港产业园","XH8082015110300850.csv")
+    data = dataPreprocess("数据20171205\数据\佛山南海气象局","XHPROPM25IN1373A.csv")
+    data.to_csv('数据20171205\数据\dataProcess_XHPROPM25IN1373A.csv')
     dataPlt(data.iloc[:, 0], label='CO')
     dataPlt(data.iloc[:, 1], label='NO2')
     dataPlt(data.iloc[:, 2] ,label='SO3')

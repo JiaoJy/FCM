@@ -11,6 +11,7 @@ from errorResult import jdwucha
 from errorResult import xdwucha
 from errorResult import result
 from errorResult import drawAll
+from errorResult import fanguiy
 
 def f(lmd,c):
     # return scipy.special.expit(-lmd*c)
@@ -150,6 +151,6 @@ if __name__ == "__main__":
 
     #print(errorLp(2,data_pre,data_test))
     drawAll(data_pre,data_test)
-    errresult(data_pre,data_test,'jaya')
+    #result(data_pre,data_test,'jaya_py')
     plt.plot(ed)
-    plt.show
+    plt.show()

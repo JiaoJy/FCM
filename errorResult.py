@@ -27,8 +27,8 @@ def RMSE(M):
 def fanguiy(A1):#反归一化
     A2 = A1.copy()
     for j in range(0,A1.shape[1]):
-        madata = max(data[:, j])
-        midata = min(data[:, j])
+        madata = max(A1[:, j])
+        midata = min(A1[:, j])
         A2[:,j] = A1[:,j] * (madata - midata) + midata
 
     return A2
